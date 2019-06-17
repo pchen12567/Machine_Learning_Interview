@@ -95,7 +95,7 @@ AUC指的是ROC曲线下的面积大小，该值能够量化地反映基于ROC�
 
 ### 结合学习和研究经历，探讨为什么在一些场景中要使用余弦相似度而不是欧式距离？
 - 对于两个向量A和B，其余弦相似度定义为：
-![](https://github.com/pchen12567/picture_store/blob/master/Interview/estimation_04.png?raw=true)
+![](https://github.com/pchen12567/picture_store/blob/master/Interview/estimation_04.png?raw=true)<br>
 分子为向量A与向量B的点乘，分母为二者各自的L2相乘，即将所有维度值的平方相加后开方。 
 余弦相似度的取值为[-1,1]，值越大表示越相似。
 - 两个向量夹角的余弦，关注的是向量之间的角度关系，并不关心它们的绝对大小，其取值范围是[−1,1]。
