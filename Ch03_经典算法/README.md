@@ -45,7 +45,7 @@ $$ g(D|A) = H(D) - H(D|A) $$
 
 - C4.5--最大信息增益比
 特征A对于数据集D的信息增益比定义为：
-$$ g_R(D,A) = \frac{g(D,A}{H_A(D} $$
+$$ g_R(D,A) = \frac{g(D,A)}{H_A(D)} $$
 其中，$H_A(D)$称为数据集D关于A的取值熵
 $$ H_A(D) = -\sum_{i=1}^n \frac{|D_i|}{|D|} \log_2 \frac{|D_i|}{|D|} $$
 
@@ -55,4 +55,4 @@ $$ Gini(D) = 1 - \sum_{k=1}^n (\frac{|C_k|}{|D|})^2 $$
 CART在每一次迭代中选择基尼指数最小的特征及其对应的切分点进行分类。
 但与ID3、C4.5不同的是，CART是一颗二叉树，采用二元切割法，每一步将数据按特征A的取值切成两份，分别进入左右子树。<br>
 特征A的Gini指数定义为:
-$$ Gini(D|A) = \sum_{i=1}^n \frac{|D_i|}{|D| Gini(D_i)} $$
+$$ Gini(D|A) = \sum_{i=1}^n \frac{|D_i|}{|D|} Gini(D_i) $$
