@@ -18,11 +18,11 @@
 对数值类型的特征做归一化可以将所有的特征都统一到一个大致相同的数值区间内
 1. 线性函数归一化 Min-Max Scaling <br>
 它对原始数据进行线性变换，使结果映射到[0,1]的范围，实现对原始数据的等比缩放，其公式如下: <br>
-$$ X_{norm} = \cfrac{X - X_{min}}{X_{max} - X_{min}} $$
+$$ X_{norm} = \frac{X - X_{min}}{X_{max} - X_{min}} $$
 
 2. 零均值归一化 Z-Score Normalization <br>
 它会将原始数据映射到均值为0、标准差为1的分布上。假设原始特征的均值为$\mu$、标准差为$\sigma$，那么其公式为: <br>
-$$ z = \cfrac{x - \mu}{\sigma} $$
+$$ z = \frac{x - \mu}{\sigma} $$
 
 **数据归一化并不是万能的。** <br>
 在实际应用中，通过梯度下降法求解的模型通常是需要归一化的，包括线性回归、逻辑回归、支持向量机、神经网络等模型。<br>
@@ -60,6 +60,11 @@ $$ z = \cfrac{x - \mu}{\sigma} $$
 3. 对模型的评估标准
     - 在分类算法中，通常会使用正确率作为指标，也就是预测结果中分类正确数据占总数据的比例。
     - 在回归算法中，用决定系数R平方来评估模型的好坏。R平方表示有多少百分比的Y波动被回归线描述。
+        - 决定性系数（coefficient of determination, R^2, R squared）
+        - 反应了y的波动有多少百分比能被x的波动所描述
+        - 拟合程度越高，越接近于1
+        - R square是可以小于0的
+        ![](https://github.com/pchen12567/picture_store/blob/master/Interview/estimation_05.png?raw=true)
 
 ## 03 高维组合特征的处理
 ### 什么是组合特征？如何处理高维组合特征？
