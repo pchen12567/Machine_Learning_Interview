@@ -29,7 +29,7 @@ $ L(\theta) = \prod_{i=1}^m \: P(y_i | x_i; \theta)$ 的学习，得到最佳参
 ### 逻辑回归的损失函数及推导过程以及什么是交叉熵？
 - **交叉熵** Cross Entropy <br>
 关于同一组事件$X_1,X_2,...,X_m$的两个分布$p$和$q$，其交叉熵的定义如下：
-$$ H(p,q) = - \sum_{i=1}^m \: p_i \: \log(q_i) $$ <br>
+$$ H(p,q) = - \sum_{i=1}^m \: p_i \: \log(q_i) $$
 当两个分布完全相同时，交叉熵取最小值。<br>
 交叉熵可以衡量两个分布之间的相似度，交叉熵越小两个分布越相似。
 - 损失函数推导过程
@@ -38,10 +38,10 @@ $$ H(p,q) = - \sum_{i=1}^m \: p_i \: \log(q_i) $$ <br>
 ### 逻辑回归应用于多分类问题时的情况？
 多项逻辑回归实际上是二分类多级回归在多标签分类下的一种拓展。
 
-二分类问题
+二分类问题<br>
 ![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_02.png?raw=true)
 
-多分类问题
+多分类问题<br>
 ![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_03.png?raw=true)
 
 ## 03 决策树

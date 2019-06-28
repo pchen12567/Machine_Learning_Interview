@@ -60,21 +60,20 @@ Ensemble Learning <br>
 - Adaboost的基分类器的训练和合并的基本步骤如下：
     1. 确定基分类器：这里可以选取ID3决策树作为基分类器。
     事实上，任何分类模型都可以作为基分类器，但树形模型由于结构简单且较易产生随机性所以比较常用。
-    2. 训练基分类器：假设训练集为$\lbrace x_i, y_i \rbrace, \: i=1,...,M$，其中$y_i \in \lbrace -1, 1 \rbrace$，
-    并且有$T$个基分类器，则可以按照如下过程来训练基分类器
+    2. 训练基分类器：假设训练集为$\lbrace x_i, y_i \rbrace, i=1,...,M$，其中$y_i \in \lbrace -1, 1 \rbrace$，
+    并且有$T$个基分类器，则可以按照如下过程来训练基分类器：
         - 初始化采样分布 $ D_1(i) = \frac {1}{M} $；
-        - 令$ t = 1,2,...,T $循环；
+        - 令$ t = 1,2,...,T $循环：
             - 从训练集中，按照$D_t$分布，采样出子集$S_t = \lbrace x_i, y_i \rbrace, i=1,...,M_t $；
             - 用$S_t$训练出基分类器 $h_t$；
             - 计算$h_t$的错误率：
             $ \epsilon_t = \frac{\sum_{i=1}^{M_t} \: I[h_t(x_i) \neq y_i]D_t(x_i)}{M_t}$
             其中$I[]$为判别函数；
-            - 计算基分类器$h_t$权重 $\alpha_t = \log \frac{1 - \epsilon_t}{\epsilon_t}$;
+            - 计算基分类器$h_t$权重 $\alpha_t = \log \frac{1 - \epsilon_t}{\epsilon_t}$；
             - 设置下一次采样
-            $$ D_{t+1} = \begin{cases} D_t(i)或者\frac{D_t(i)(1 - \epsilon_t)}{\epsilon_t}, & h_t(x_i) \neq y_i;\\
-            \frac{D_t(i) \epsilon_t}{(1 - \epsilon_t)}, & h_t(x_i) = y_i \end{cases} $$
+            $$ D_{t+1} = \begin{cases} D_t(i)或者\frac{D_t(i)(1 - \epsilon_t)}{\epsilon_t}, & h_t(x_i) \neq y_i; \\ \frac{D_t(i) \epsilon_t}{(1 - \epsilon_t)}, & h_t(x_i) = y_i \end{cases} $$
             并将它归一化为一个概率分布函数。
-    3. 合并基分类器：给定一个位置样本$z$，输出分类结果为加权投票的结果$Sign(\sum_{t=1}^T & h_t(z) \alpha_t)$。
+    3. 合并基分类器：给定一个位置样本$z$，输出分类结果为加权投票的结果$Sign(\sum_{t=1}^T \: h_t(z) \alpha_t)$。
     
     从Adaboost的例子中可以明显地看到Boosting的思想，对分类正确的样本降低了权重，对分类错误的样本升高或者保持权重不变。
     在最后进行模型融合的过程中，也根据错误率对基分类器进行加权融合。错误率低的分类器拥有更大的“话语权”。
