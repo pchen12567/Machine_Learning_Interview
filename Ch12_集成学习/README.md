@@ -58,7 +58,7 @@ Ensemble Learning <br>
     （或者用更复杂的算法融合，比如把各基分类器的输出作为特征，使用逻辑回归作为融合模型进行最后的结果预测）作为最终的输出。
 
 - 集成学习的例子：
-    1. Adaboost-自适应Boosting（Adaptive Boosting)
+    1. Adaboost-自适应Boosting（Adaptive Boosting）<br>
     其基分类器的训练和合并的基本步骤如下：
         1. 确定基分类器：这里可以选取ID3决策树作为基分类器。
         事实上，任何分类模型都可以作为基分类器，但树形模型由于结构简单且较易产生随机性所以比较常用。
@@ -70,7 +70,7 @@ Ensemble Learning <br>
                 - 用$S_t$训练出基分类器 $h_t$；
                 - 计算$h_t$的错误率：
                 $ \epsilon_t = \frac{\sum_{i=1}^{M_t} \: I[h_t(x_i) \neq y_i]D_t(x_i)}{M_t}$
-                其中$I[]$为判别函数；
+                其中$I[ ]$为判别函数；
                 - 计算基分类器$h_t$权重 $\alpha_t = \log \frac{1 - \epsilon_t}{\epsilon_t}$；
                 - 设置下一次采样
                 $$ D_{t+1} = \begin{cases} D_t(i)或者\frac{D_t(i)(1 - \epsilon_t)}{\epsilon_t}, & h_t(x_i) \neq y_i; \quad \frac{D_t(i) \epsilon_t}{(1 - \epsilon_t)}, & h_t(x_i) = y_i \end{cases} $$
@@ -100,7 +100,7 @@ Ensemble Learning <br>
 除了决策树外，神经网络模型也适合作为基分类器，主要由于神经网络模型也比较“不稳定”，
 而且还可以通过调整神经元数量、连接方式、网络层数、初始权值等方式引入随机性。
 
-### 可否将随机森林中的基分类器，由据测算替换为线性分类器或K-NN？请解释为什么？
+### 可否将随机森林中的基分类器，由决策树替换为线性分类器或K-NN？请解释为什么？
 随机森林属于Bagging类的集成学习。Bagging的主要好处是集成后的分类器的方差，比基分类器的方差小。
 Bagging所采用的基分类器，最好是本身对样本分布较为敏感的（即所谓不稳定的分类器），这样Bagging才能有用武之地。
 线性分类器或者K-近邻都是较为稳定的分类器，本身方差就不大，
@@ -123,7 +123,7 @@ Bagging所采用的基分类器，最好是本身对样本分布较为敏感的�
 方差通常是由于模型的复杂度相对于训练样本数m过高导致的，比如一共有100个训练样本，
 而假设模型是阶数不大于200的多项式函数。由方差带来的误差通常体现在测试误差相对于训练误差的增量上。
 
-偏差和方差示意图
+偏差和方差示意图 <br>
 ![](https://github.com/pchen12567/picture_store/blob/master/Interview/ensemble_02.png?raw=true)
 
 ### 如何从减小方差和偏差的角度解释Boosting和Bagging的原理？
@@ -148,7 +148,7 @@ Boosting的训练过程：在训练好一个弱分类器后，需要计算弱分
 需要对模型的复杂度做合理的假设。如果模型复杂度过低，虽然方差很小，但是偏差会很高；
 如果模型复杂度过高，虽然偏差降低了，但是方差会很高。所以需要综合考虑偏差和方差选择合适复杂度的模型进行训练。
 
-如图所示，泛化误差、偏差、方差和模型复杂度的关系。
+如图所示，泛化误差、偏差、方差和模型复杂度的关系。<br>
 ![](https://github.com/pchen12567/picture_store/blob/master/Interview/ensemble_03.png?raw=true)
 
 ## 05 梯度提升决策树的基本原理
@@ -178,6 +178,9 @@ GBDT中使用的决策树通常为CART。
 
 GBDT算法的伪代码如下: <br>
 ![](https://github.com/pchen12567/picture_store/blob/master/Interview/ensemble_04.png?raw=true)
+
+GBDT训练过程举例如图：<br>
+![](https://github.com/pchen12567/picture_store/blob/master/Interview/ensemble_06.png?raw=true)
 
 ### 梯度提升和梯度下降的区别和联系是什么？
 两者都是在每一轮迭代中，利用损失函数相对于模型的负梯度方向的信息来对当前模型进行更新，只不过在梯度下降中，
