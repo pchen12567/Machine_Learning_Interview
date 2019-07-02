@@ -69,13 +69,13 @@ Ensemble Learning <br>
                 - 从训练集中，按照$D_t$分布，采样出子集$S_t = \lbrace x_i, y_i \rbrace, i=1,...,M_t $；
                 - 用$S_t$训练出基分类器 $h_t$；
                 - 计算$h_t$的错误率：
-                $ \epsilon_t = \frac{\sum_{i=1}^{M_t} \: I[h_t(x_i) \neq y_i]D_t(x_i)}{M_t}$
-                其中$I[ ]$为判别函数；
+                $ \epsilon_t = \frac{\sum_{i=1}^{M_t} I[h_t(x_i) \neq y_i]D_t(x_i)}{M_t}$
+                其中$I[\quad]$为判别函数；
                 - 计算基分类器$h_t$权重 $\alpha_t = \log \frac{1 - \epsilon_t}{\epsilon_t}$；
                 - 设置下一次采样
-                $$ D_{t+1} = \begin{cases} D_t(i)或者\frac{D_t(i)(1 - \epsilon_t)}{\epsilon_t}, & h_t(x_i) \neq y_i; \quad \frac{D_t(i) \epsilon_t}{(1 - \epsilon_t)}, & h_t(x_i) = y_i \end{cases} $$
+                $$ D_{t+1} = \begin{cases} D_t(i)或者\frac{D_t(i)(1 - \epsilon_t)}{\epsilon_t}, h_t(x_i) \neq y_i; \quad \frac{D_t(i) \epsilon_t}{(1 - \epsilon_t)}, & h_t(x_i) = y_i \end{cases} $$
                 并将它归一化为一个概率分布函数。
-        3. 合并基分类器：给定一个位置样本$z$，输出分类结果为加权投票的结果$Sign(\sum_{t=1}^T \: h_t(z) \alpha_t)$。
+        3. 合并基分类器：给定一个位置样本$z$，输出分类结果为加权投票的结果$Sign(\sum_{t=1}^T h_t(z) \alpha_t)$。
         
         从Adaboost的例子中可以明显地看到Boosting的思想，对分类正确的样本降低了权重，对分类错误的样本升高或者保持权重不变。
         在最后进行模型融合的过程中，也根据错误率对基分类器进行加权融合。错误率低的分类器拥有更大的“话语权”。
@@ -192,11 +192,11 @@ GBDT训练过程举例如图：<br>
 输出：回归树$f(x)$。<br>
 在训练数据集所在的输入空间中，递归的将每个区域划分为两个子区域并决定每个子区域上的输出值，构建二叉决策树：
     1. 选择最优切分变量$j$与切分点$s$，求解：
-    $$\min_{j,s} \bigg[ \min_{c1} \sum_{x_i \in R_1(j,s)} (y_i - c_1)^2 \: + \: \min_{c_2} \sum_{x_i \in R_2(j,s)} (y_i - c_2)^2 \bigg]$$
+    $$\min_{j,s} \bigg[ \min_{c1} \sum_{x_i \in R_1(j,s)} (y_i - c_1)^2 + \min_{c_2} \sum_{x_i \in R_2(j,s)} (y_i - c_2)^2 \bigg]$$
     遍历变量$j$，对固定的切分变量$j$扫描切分点$s$，选择使得上式达到最小值的对$(j,s)$。
     2. 用选的的对$(j,s)$划分区域并决定相应的输出值：
-    $$ R_1(j,s) = \{ x|x^{(j)} \leq s \} \: and \: R_2(j,s) = \{ x|x^{(j)} > s \} $$
-    $$ \hat{c_m} = \frac{1}{N} \: \sum_{x_i \in R_m(j,s)} y_i, \quad x_i \in R_m, \: m = 1,2 $$
+    $$ R_1(j,s) = \lbrace x|x^{(j)} \leq s \rbrace and R_2(j,s) = \lbrace x|x^{(j)} > s \rbrace $$
+    $$ \hat{c_m} = \frac{1}{N} \sum_{x_i \in R_m(j,s)} y_i, \quad x_i \in R_m, m = 1,2 $$
     3. 继续对两个子区域调用步骤(i)和(ii)，直到满足停止条件。
     4. 将输入空间划分为$M$个区域$ R_1, R_2,...,R_M$，生成决策树：
     $$ f(x) = \sum_{m=1}^M \hat{c_m}I(x \in R_m) $$
@@ -232,11 +232,11 @@ GBDT训练过程举例如图：<br>
     
     **负梯度**:
     1. 第$t$轮的第$i$个样本的损失函数的负梯度为：
-    $$ -\bigg[ \frac{\partial L(y,f(x_i))}{\partial f(x_i)} \bigg]_{f(x) = f_{t-1}(x)}$$
+    $$ - \bigg[ \frac{\partial L(y,f(x_i))}{\partial f(x_i)} \bigg]_{f(x) = f_{t-1}(x)}$$
     2. 此时不同的损失函数将会得到不同的负梯度，如果选择平方损失：
     $$ L(y,f(x_i)) = \frac{1}{2} (y - f(x_i))^2 $$
     3. 负梯度为：
-    $$ -\bigg[ \frac{\partial L(y,f(x_i))}{\partial f(x_i)} \bigg]_{f(x) = f_{t-1}(x)} = y - f(x_i) $$
+    $$ - \bigg[ \frac{\partial L(y,f(x_i))}{\partial f(x_i)} \bigg]_{f(x) = f_{t-1}(x)} = y - f(x_i) $$
     4. 此时我们发现GBDT的**负梯度就是残差**，所以说对于回归问题，要拟合的就是残差。
     5. 对于分类问题，二分类和多分类的损失函数都是$\log loss$
 
@@ -255,12 +255,12 @@ GBDT训练过程举例如图：<br>
     
     2. 对迭代轮数$ m = 1,2,...,M $有：
         1. 对给个样本$ i=1,2,...,N $，计算负梯度，即残差：
-        $$ r_{mi} = -\bigg[ \frac{\partial L(y,f(x_i))}{\partial f(x_i)} \bigg]_{f(x) = f_{m-1}(x)} $$
+        $$ r_{mi} = - \bigg[ \frac{\partial L(y,f(x_i))}{\partial f(x_i)} \bigg]_{f(x) = f_{m-1}(x)} $$
         2. 将上一步得到的残差作为样本新的真实值，并将数据$ (x_i,r_{mi}), i=1,2,...,N $作为下棵树的训练数据，
         得到一颗新的回归树$ f_m(x) $，其对应的叶子节点区域为$ R_{mj}, j=1,2,...,J $，
         其中$J$为回归树$t$的叶子节点的个数。
         3. 对叶子区域$ j=1,2,...,J $计算最佳拟合值：
-        $$ \Upsilon_{m,j} = \underbrace{arg \min}_\Upsilon \sum_{x_i \in R_{mj}} L(y_i, \: f_{m-1}(x_i) + \Upsilon) $$
+        $$ \Upsilon_{m,j} = \underbrace{ arg \min }_{\Upsilon} \sum_{x_i \in R_{mj}} L(y_i, f_{m-1}(x_i) + \Upsilon ) $$
         4. 更新强学习器：
         $$ f_m(x) = f_{m-1}(x) + \sum_{j=1}^J \Upsilon_{mj}I, \quad (x \in R_{mj}) $$
     
@@ -306,14 +306,14 @@ XGBoost Tree由多个CART集成，按照策略选取最佳分隔点，对稀疏�
 1. CART回归树 <br>
     CART回归树是假设树为二叉树，通过不断将特征进行分裂。比如当前树结点是基于第j个特征值进行分裂的，
     设该特征值小于s的样本划分为左子树，大于s的样本划分为右子树。
-    $$ R_1(j,s) = \{ x|x^{(j)} \leq s \} \: and \: R_2(j,s) = \{ x|x^{(j)} > s \} $$
+    $$ R_1(j,s) = \lbrace x|x^{(j)} \leq s \rbrace and R_2(j,s) = \lbrace x|x^{(j)} > s \rbrace $$
 
     而CART回归树实质上就是在该特征维度对样本空间进行划分，而这种空间划分的优化是一种NP难问题，
     因此，在决策树模型中是使用启发式方法解决。典型CART回归树产生的目标函数为：
     $$ \sum_{x_i \in R_m} (y_i - f(x_i))^2 $$
     
     因此，当为了求解最优的切分特征j和最优的切分点s，就转化为求解这么一个目标函数：
-    $$ \min_{j,s} \bigg[ \min_{c1} \sum_{x_i \in R_1(j,s)} (y_i - c_1)^2 \: + \: \min_{c_2} \sum_{x_i \in R_2(j,s)} (y_i - c_2)^2 \bigg] $$
+    $$ \min_{j,s} \bigg[ \min_{c1} \sum_{x_i \in R_1(j,s)} (y_i - c_1)^2 + \min_{c_2} \sum_{x_i \in R_2(j,s)} (y_i - c_2)^2 \bigg] $$
     
     所以只要遍历所有特征的所有切分点，就能找到最优的切分特征和切分点。最终得到一棵回归树。
 
@@ -322,7 +322,7 @@ XGBoost Tree由多个CART集成，按照策略选取最佳分隔点，对稀疏�
     当训练完成得到$k$棵树，要预测一个样本的分数，其实就是根据这个样本的特征，在每棵树中会落到对应的一个叶子节点，
     每个叶子节点就对应一个分数，最后只需要将每棵树对应的分数加起来就是该样本的预测值。
     $$ \hat{y} = \phi (x_i) = \sum_{k=1}^K f_k(x_i) $$
-    $$ where \: F = \{ f(x) = w_{q(x)} \} \quad (q:R^m \rightarrow T, w \in R^T) $$
+    $$ where \quad F = \lbrace f(x) = w_{q(x)} \rbrace \quad (q:R^m \rightarrow T, w \in R^T) $$
     一个含有$n$个样本$m$个特征的数据集，其中$q$代表每颗树中叶子节点的索引；$T$代表一颗树上的叶子数量；
     $f_k$代表一颗叶子节点为$q$叶子的权重为$w$独立的回归树；由于回归树的每个叶子上的权重是一个连续值，
     因此用$w_i$代表$i-th$叶子上的权重。<br>
@@ -334,19 +334,16 @@ XGBoost Tree由多个CART集成，按照策略选取最佳分隔点，对稀疏�
     $$ Obj = L(\phi) = \sum_{i=1}^n l(y_i, \hat{y_i}^{(t)}) + \sum_{k=1}^K \Omega (f_k) $$
     $$ where \quad \Omega(f) = \gamma T + \frac{1}{2} \lambda ||w||^2 $$
     目标函数由两部分构成，第一部分是经验误差，用来衡量预测分数和真实分数的差距，另一部分则是正则化项。
-    其中是$y_i$真实值，$\hat{y_i}^{(t)}$是第$t$轮的预测值，$\l()$是经验损失函数，$\Omega$是正则项，防止过拟合或欠拟合，
+    其中是$y_i$真实值，$\hat{y_i}^{(t)}$是第$t$轮的预测值，$l()$是经验损失函数，$\Omega$是正则项，防止过拟合或欠拟合，
     $f$是一颗CART树，$f_k(x_i)$即输入$x_i$的第$k$课树的输出值。正则化项同样包含两部分，$T$表示叶子结点的个数，
     $w$表示叶子节点的分数。$\gamma$可以控制叶子结点的个数，$\lambda$可以控制叶子节点的分数不会过大，防止过拟合。
     
     2. 第$t$轮的预测值<br>
     新生成的树是要拟合上次预测的残差的，即当生成t棵树后，预测分数可以写成：
-    ```math
-    \hat{y_i}^{(0)} = 0
-    \hat{y_i}^{(1)} = f_1(x_i) = \hat{y_i}^{(0)} + f_1(x_i)
-    \hat{y_i}^{(2)} = f_1(x_i) + f_2(x_i) = \hat{y_i}^{(1)} + f_2(x_i)
-    ...
-    \hat{y_i}^{(t)} = \sum_{k=1}^t f_k(x_i) = \hat{y_i}^{(t-1)} +f_t(x_i)
-    ```
+    $$ \hat{y_i}^{(0)} = 0 $$
+    $$ \hat{y_i}^{(1)} = f_1(x_i) = \hat{y_i}^{(0)} + f_1(x_i) $$
+    $$ \hat{y_i}^{(2)} = f_1(x_i) + f_2(x_i) = \hat{y_i}^{(1)} + f_2(x_i) $$
+    $$ ... $$
+    $$ \hat{y_i}^{(t)} = \sum_{k=1}^t f_k(x_i) = \hat{y_i}^{(t-1)} +f_t(x_i) $$
     
-
 ### XGBoost与GBDT的联系和区别有哪些？
