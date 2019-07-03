@@ -195,7 +195,7 @@ GBDT训练过程举例如图：<br>
     $$\min_{j,s} \bigg[ \min_{c1} \sum_{x_i \in R_1(j,s)} (y_i - c_1)^2 + \min_{c_2} \sum_{x_i \in R_2(j,s)} (y_i - c_2)^2 \bigg]$$
     遍历变量$j$，对固定的切分变量$j$扫描切分点$s$，选择使得上式达到最小值的对$(j,s)$。
     2. 用选的的对$(j,s)$划分区域并决定相应的输出值：
-    $$ R_1(j,s) = \lbrace x|x^{(j)} \leq s \rbrace and R_2(j,s) = \lbrace x|x^{(j)} > s \rbrace $$
+    $$ R_1(j,s) = \lbrace x|x^{(j)} \leq s \rbrace \quad and \quad R_2(j,s) = \lbrace x|x^{(j)} > s \rbrace $$
     $$ \hat{c_m} = \frac{1}{N} \sum_{x_i \in R_m(j,s)} y_i, \quad x_i \in R_m, m = 1,2 $$
     3. 继续对两个子区域调用步骤(i)和(ii)，直到满足停止条件。
     4. 将输入空间划分为$M$个区域$ R_1, R_2,...,R_M$，生成决策树：
@@ -217,7 +217,7 @@ GBDT训练过程举例如图：<br>
     
     **残差**:
     1. 在提升树算法中，假设前一轮迭代得到的强学习器是$ f_{t-1}(x) $
-    2. 损失函数是$ L(y, f_{t-1}(x) $
+    2. 损失函数是$ L(y, f_{t-1}(x)) $
     3. 本轮迭代的目标是找到一个弱学习器$ h_t(x) $
     4. 最小化本轮的损失$ L(y,f_t(x)) = L(y, f_{t-1}(x) + h_t(x)) $
     5. 当采用评分损失函数时
@@ -232,7 +232,7 @@ GBDT训练过程举例如图：<br>
     
     **负梯度**:
     1. 第$t$轮的第$i$个样本的损失函数的负梯度为：
-    $$ - \bigg[ \frac{\partial L(y,f(x_i))}{\partial f(x_i)} \bigg]_{f(x) = f_{t-1}(x)}$$
+    $$ - \bigg[ \frac{\partial L(y,f(x_i))}{\partial f(x_i)} \bigg]_{f(x) = f_{t-1}(x)} $$
     2. 此时不同的损失函数将会得到不同的负梯度，如果选择平方损失：
     $$ L(y,f(x_i)) = \frac{1}{2} (y - f(x_i))^2 $$
     3. 负梯度为：
@@ -260,7 +260,7 @@ GBDT训练过程举例如图：<br>
         得到一颗新的回归树$ f_m(x) $，其对应的叶子节点区域为$ R_{mj}, j=1,2,...,J $，
         其中$J$为回归树$t$的叶子节点的个数。
         3. 对叶子区域$ j=1,2,...,J $计算最佳拟合值：
-        $$ \Upsilon_{m,j} = \underbrace{ arg \min }_{\Upsilon} \sum_{x_i \in R_{mj}} L(y_i, f_{m-1}(x_i) + \Upsilon ) $$
+        $$ \Upsilon_{m,j} = \underbrace{arg \min}_{\Upsilon} \sum_{x_i \in R_{mj}} L(y_i, f_{m-1}(x_i) + \Upsilon ) $$
         4. 更新强学习器：
         $$ f_m(x) = f_{m-1}(x) + \sum_{j=1}^J \Upsilon_{mj}I, \quad (x \in R_{mj}) $$
     
@@ -306,7 +306,7 @@ XGBoost Tree由多个CART集成，按照策略选取最佳分隔点，对稀疏�
 1. CART回归树 <br>
     CART回归树是假设树为二叉树，通过不断将特征进行分裂。比如当前树结点是基于第j个特征值进行分裂的，
     设该特征值小于s的样本划分为左子树，大于s的样本划分为右子树。
-    $$ R_1(j,s) = \lbrace x|x^{(j)} \leq s \rbrace and R_2(j,s) = \lbrace x|x^{(j)} > s \rbrace $$
+    $$ R_1(j,s) = \lbrace x|x^{(j)} \leq s \rbrace \quad and \quad R_2(j,s) = \lbrace x|x^{(j)} > s \rbrace $$
 
     而CART回归树实质上就是在该特征维度对样本空间进行划分，而这种空间划分的优化是一种NP难问题，
     因此，在决策树模型中是使用启发式方法解决。典型CART回归树产生的目标函数为：
@@ -331,14 +331,14 @@ XGBoost Tree由多个CART集成，按照策略选取最佳分隔点，对稀疏�
 
 3. XGBoost原理
     1. XGBoost目标函数定义为：
-    $$ Obj = L(\phi) = \sum_{i=1}^n l(y_i, \hat{y_i}^{(t)}) + \sum_{k=1}^K \Omega (f_k) $$
+    $$ Obj^{(t)} = L(\phi)^{(t)} = \sum_{i=1}^n l(y_i, \hat{y_i}^{(t)}) + \sum_{k=1}^K \Omega (f_k) $$
     $$ where \quad \Omega(f) = \gamma T + \frac{1}{2} \lambda ||w||^2 $$
     目标函数由两部分构成，第一部分是经验误差，用来衡量预测分数和真实分数的差距，另一部分则是正则化项。
     其中是$y_i$真实值，$\hat{y_i}^{(t)}$是第$t$轮的预测值，$l()$是经验损失函数，$\Omega$是正则项，防止过拟合或欠拟合，
     $f$是一颗CART树，$f_k(x_i)$即输入$x_i$的第$k$课树的输出值。正则化项同样包含两部分，$T$表示叶子结点的个数，
     $w$表示叶子节点的分数。$\gamma$可以控制叶子结点的个数，$\lambda$可以控制叶子节点的分数不会过大，防止过拟合。
     
-    2. 第$t$轮的预测值<br>
+    2. 第$t$轮的预测值：<br>
     新生成的树是要拟合上次预测的残差的，即当生成t棵树后，预测分数可以写成：
     $$ \hat{y_i}^{(0)} = 0 $$
     $$ \hat{y_i}^{(1)} = f_1(x_i) = \hat{y_i}^{(0)} + f_1(x_i) $$
@@ -346,4 +346,36 @@ XGBoost Tree由多个CART集成，按照策略选取最佳分隔点，对稀疏�
     $$ ... $$
     $$ \hat{y_i}^{(t)} = \sum_{k=1}^t f_k(x_i) = \hat{y_i}^{(t-1)} +f_t(x_i) $$
     
+    3. 目标函数改写为：
+    $$ Obj^{(t)} = L(\phi)^{(t)} = \sum_{i=1}^n l(y_i, \hat{y_i}^{(t-1)} + f_t(x_i)) + \Omega(f_t) $$
+    此时，就是要找到一个$f_t$能够最小化目标函数。XGBoost的想法是利用其在$f_t = 0$处的泰勒二阶展开近似它。
+    
+    4. 泰勒二阶展开式：
+    $$ f(x + \Delta x) \approx f(x) + f'(x) \Delta x + \frac{1}{2}f''(x) \Delta x^2 $$
+    对应二阶泰勒展开式，这里$x$即为$\hat{y_i}^{(t-1)}$，而$\Delta x$即为$f_t(x_i)$，可以将目标函数近似为：
+    $$ L(\phi)^{(t)} \approx \sum_{i=1}^n \bigg[ l(y_i, \hat{y_i}^{(t-1)}) + g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i) \bigg] + \Omega(f_t) $$
+    其中$g_i$为一阶导数，$h_i$为二阶导数：
+    $$ g_i = \partial_{\hat{y}^{(t-1)}} l(y_i, \hat{y}^{(t-1)}), \quad h_i = \partial_{\hat{y}^{(t-1)}}^2 l(y_i, \hat{y}^{(t-1)}) $$
+    
+    5. 去掉常数项：<br>
+    由于前$t-1$颗树的预测值与$y$的残差对目标函数优化不影响，可以直接去掉$l(y_i, \hat{y_i}^{(t-1)})$。简化目标函数为：
+    $$ \tilde{L}^{(t)} = \sum_{i=1}^n \bigg[ g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i) \bigg] + \Omega(f_t) $$
+    
+    6. 重组叶子节点样本：<br>
+    上式是将每个样本的损失函数值加起来，由于每个样本都最终会落到一个叶子结点中，所以可以将所以同一个叶子结点的样本重组起来，
+    然后将正则项展开，合并得到：
+    $$ \tilde{L}^{(t)} = \sum_{i=1}^n \bigg[ g_i f_t(x_i) + \frac{1}{2} h_i f_t(x_i)^2 \bigg] + \gamma T + \frac{1}{2} \lambda \sum_{j=1}^T w_i^2 $$
+    $$ => \tilde{L}^{(t)} = \sum_{j=1}^T \bigg[ (\sum_{i \in I_j}g_i) w_j + \frac{1}{2} (\sum_{i \in I_j} h_i + \lambda) w_j^2 \bigg] + \gamma T $$
+    $$ => \tilde{L}^{(t)} = \sum_{j=1}^T \bigg[ G_j w_j +\frac{1}{2} (H_j +\lambda) w_j^2 \bigg] + \gamma T $$
+    
+    7. 一元二次方程顶点式：<br>
+    对于一元二次方程：$ y = ax^2 + bx + c $，其顶点式为：$ y = a(x - h)^2 + k $，其顶点坐标$(h,k)$为：
+    $$ (-\frac{b}{2a}, \frac{4ac - b^2}{4a}) $$
+    
+    8. 求目标函数的最小值：<br>
+    由于目标函数在顶点位置时为最小值，根据一元二次方程的顶点式，此时最优的$w$为：
+    $$ w_j^* = -\frac{G_j}{H_j + \lambda} $$
+    将最优$w$带入到目标函数中，得到此时的目标函数为：
+    $$ \tilde{L}^{(t)} = -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j + \lambda} + \gamma T $$
+            
 ### XGBoost与GBDT的联系和区别有哪些？
