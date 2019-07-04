@@ -246,7 +246,7 @@ GBDT训练过程举例如图：<br>
         1. 初始化弱学习器：
         $$ f_0(x) = arg \min_c \sum_{i=1}^N L(y_i, c) $$
         2. 损失函数为平方损失，因为平方损失函数是一个凸函数，直接求导：
-        $$ \sum_{i=1}^N \frac{\partial L(y_i,c)}{\partial c} = \sum_{i=1}^N \frac{\partial (\frac{1}{2} (y_i - c)^2}{\partial c} = \sum_{i=1}^N c - y_i $$
+        $$ \sum_{i=1}^N \frac{\partial L(y_i,c)}{\partial c} = \sum_{i=1}^N \frac{\partial (\frac{1}{2}) (y_i - c)^2}{\partial c} = \sum_{i=1}^N c - y_i $$
         3. 令导数等于0：
         $$ \sum_{i=1}^N c - y_i = 0 $$
         $$ c = \frac{\sum_{i=1}^N y_i}{N} $$
@@ -255,7 +255,7 @@ GBDT训练过程举例如图：<br>
     
     2. 对迭代轮数$ m = 1,2,...,M $有：
         1. 对给个样本$ i=1,2,...,N $，计算负梯度，即残差：
-        $$ r_{mi} = - \bigg[ \frac{\partial L(y,f(x_i))}{\partial f(x_i)} \bigg]_{f(x) = f_{m-1}(x)} $$
+        $$ r_{mi} = - \bigg[ \frac{\partial L(y,f(x_i))}{\partial f(x_i)} \bigg] \_{f(x) = f_{m-1}(x)} $$
         2. 将上一步得到的残差作为样本新的真实值，并将数据$ (x_i,r_{mi}), i=1,2,...,N $作为下棵树的训练数据，
         得到一颗新的回归树$ f_m(x) $，其对应的叶子节点区域为$ R_{mj}, j=1,2,...,J $，
         其中$J$为回归树$t$的叶子节点的个数。
@@ -296,6 +296,9 @@ XGBoost是陈天奇等人开发的一个开源机器学习项目，高效地实�
 这样才能够更好地进行模型调参并针对特定业务场景进行模型改进。
 
 ### XGBoost的原理是什么？
+> [参考：论文原文](https://github.com/pchen12567/Machine_Learning_Interview/blob/master/Ch12_%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/XGBoost/XGBoost.pdf)
+> [参考](https://zhuanlan.zhihu.com/p/40129825)
+
 XGBoost是boosting算法的其中一种。
 Boosting算法的思想是将许多弱分类器集成在一起形成一个强分类器。
 
@@ -327,7 +330,7 @@ XGBoost Tree由多个CART集成，按照策略选取最佳分隔点，对稀疏�
     $f_k$代表一颗叶子节点为$q$叶子的权重为$w$独立的回归树；由于回归树的每个叶子上的权重是一个连续值，
     因此用$w_i$代表$i-th$叶子上的权重。<br>
     如下图例子，训练出了2棵决策树，小孩的预测分数就是两棵树中小孩所落到的结点的分数相加。爷爷的预测分数同理。
-    ![]()
+    ![](https://github.com/pchen12567/picture_store/blob/master/Interview/XGBoost_01.png?raw=true)
 
 3. XGBoost原理
     1. XGBoost目标函数定义为：
@@ -364,7 +367,9 @@ XGBoost Tree由多个CART集成，按照策略选取最佳分隔点，对稀疏�
     6. 重组叶子节点样本：<br>
     上式是将每个样本的损失函数值加起来，由于每个样本都最终会落到一个叶子结点中，所以可以将所以同一个叶子结点的样本重组起来，
     然后将正则项展开，合并得到：
-    $$ \tilde{L}^{(t)} = \sum_{i=1}^n \bigg[ g_i f_t(x_i) + \frac{1}{2} h_i f_t(x_i)^2 \bigg] + \gamma T + \frac{1}{2} \lambda \sum_{j=1}^T w_i^2 $$
+    $$ \tilde{L}^{(t)} = \sum_{i=1}^n \bigg[ g_if_t(x_i) + \frac{1}{2}h_if_t^2(x_i) \bigg] + \Omega(f_t) $$
+    $$ => \tilde{L}^{(t)} = \sum_{i=1}^n \bigg[ g_i f_t(x_i) + \frac{1}{2} h_i f_t(x_i)^2 \bigg] + \gamma T + \frac{1}{2} \lambda \sum_{j=1}^T w_i^ $$
+    $$ => \tilde{L}^{(t)} = \sum_{i=1}^n \bigg[ g_i w_{q(x_i)} + \frac{1}{2} h_i w_{q(x_i)}^2 \bigg] + \gamma T + \frac{1}{2} \lambda \sum_{j=1}^T w_i^2 $$
     $$ => \tilde{L}^{(t)} = \sum_{j=1}^T \bigg[ (\sum_{i \in I_j}g_i) w_j + \frac{1}{2} (\sum_{i \in I_j} h_i + \lambda) w_j^2 \bigg] + \gamma T $$
     $$ => \tilde{L}^{(t)} = \sum_{j=1}^T \bigg[ G_j w_j +\frac{1}{2} (H_j +\lambda) w_j^2 \bigg] + \gamma T $$
     
@@ -377,5 +382,103 @@ XGBoost Tree由多个CART集成，按照策略选取最佳分隔点，对稀疏�
     $$ w_j^* = -\frac{G_j}{H_j + \lambda} $$
     将最优$w$带入到目标函数中，得到此时的目标函数为：
     $$ \tilde{L}^{(t)} = -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j + \lambda} + \gamma T $$
-            
+    
+    ![](https://github.com/pchen12567/picture_store/blob/master/Interview/XGBoost_02.png?raw=true)
+
+4. 分割节点算法<br>
+    在上面的推导中，如果一棵树的结构确定了，可以求得每个叶子结点的分数。但还没介绍如何确定树结构，
+    即每次特征分裂怎么寻找最佳特征，怎么寻找最佳分裂点。
+    
+    正如上文说到，基于空间切分去构造一颗决策树是一个NP难问题，不可能去遍历所有树结构，因此，
+    XGBoost使用了和CART回归树一样的想法，利用贪婪算法，遍历所有特征的所有特征划分点，不同的是使用上式目标函数值作为评价函数。
+    具体做法就是分裂后的目标函数值比单子叶子节点的目标函数的增益，同时为了限制树生长过深，还加了个阈值，只有当增益大于该阈值才进行分裂。
+    
+    同时可以设置树的最大深度、当样本权重之和小于设定阈值时停止生长去防止过拟合。
+    
+    假设$I_L$和$I_R$分别为样本分割后的左、右样本子集，满足$I = I_L \cup I_R$，分割后的损失函数为：
+    $$ Gain = L_{split} = \frac{1}{2} \bigg[ \frac{(\sum_{i \in I_L } g_i)^2}{\sum_{i \in I_L} h_i + \lambda} + \frac{(\sum_{i \in I_R } g_i)^2}{\sum_{i \in I_R} h_i + \lambda} - \frac{(\sum_{i \in I } g_i)^2}{\sum_{i \in I} h_i + \lambda} \bigg] - \gamma $$
+    
+    4.1 基础贪心算法 (Basic Exact Greedy Algorithm) <br>
+    在所有特征上遍历，每个特征中选择该特征下的每个值作为其分裂点，计算增益损失。当遍历完所有特征之后，
+    增益损失最大的特征值将作为其分裂点。由此可以看出这其实就是一种穷举算法，而整个树构造过程最耗时的过程就是寻找最优分裂点的过程。
+    
+    缺点是：<span style='color:red;'>当数据量过大，贪心算法就不好用了，因为要遍历每个分割点，甚至内存都放不下，不能高效操。</span>
+    
+    具体算法伪代码如下：<br>
+    ![](https://github.com/pchen12567/picture_store/blob/master/Interview/XGBoost_03.png?raw=true)
+    
+    4.2 近似算法 (Approximate Algorithm) <br>
+    对于连续型特征值，当样本数量非常大，该特征取值过多时，遍历所有取值会花费很多时间，且容易过拟合。
+    XGBoost的思想，是根据特征分布的百分数采样，选择待分隔点，将连续的特征映射到一个桶（buckets）中，即找到$l$个划分点，
+    将位于相邻分位点之间的样本分在一个桶中。在遍历该特征的时候，只需要遍历各个分位点，从而计算最优划分。
+    基于统计信息选择最佳分隔方案。选择分隔点的方式有两个，一种是global，一种是local。
+    
+    **global**是在树构建的初始阶段选出所有候选分隔点，后面每层都使用相同的策略选择分隔点；
+    全局的近似是在新生成一棵树之前就对各个特征计算分位点并划分样本，之后在每次分裂过程中都采用近似划分。
+    
+    **local**在每次split后重新选出候选分隔点，适合较深的树，这样步骤比global多。
+    局部近似就是在具体的某一次分裂节点的过程中采用近似算法。
+    
+    综上，local只需要较少的候选点，而global必须要有足够多的候选点（桶）才能达到和local差不多的精确度。
+    对每一个特征进行「值」采样，原来需要对每一个特征的每一个可能分割点进行尝试，采样之后只针对采样的点进行分割尝试，
+    这种方法很明显可以减少计算量，采样密度越小计算的越快，拟合程度也会越差，所以采样还可以防止过拟合。
+    
+    具体算法伪代码如下：<br>
+    ![](https://github.com/pchen12567/picture_store/blob/master/Interview/XGBoost_04.png?raw=true)
+    
+    4.3 稀疏感知的分割点查找算法 (Sparsity-aware Split Finding) <br>
+    该算法主要是针对存在缺失值的情况，当样本的第$i$个特征值缺失时，无法利用该特征进行划分时，
+    XGBoost的想法是将该样本分别划分到左结点和右结点，然后计算其增益，哪个大就划分到哪边。
+    
+    具体算法伪代码如下：<br>
+    ![](https://github.com/pchen12567/picture_store/blob/master/Interview/XGBoost_05.png?raw=true)
+    
+    4.4 带权重直方图算法 (Weighted Quantile Sketch)
+    - 样本的所有第$k$个特征构造一个集合：{特征的值，二阶导数}
+    - 序函数表示第$k$个特征的值小于$z$的样本比例，为了找到满足相邻两个分隔点的值相差不大于阈值$e$的分隔点。
+    - 相当于将特征的值排序，在这个序列上根据计算带权的序函数选择合适的分隔点，使得每个含有不同权重的特征值区间分布均匀。
+    - 对于带权重的数据集合，此前还没有直方图算法来处理。
+    
+    构造略图（sketching）是指使用随机映射（Random projections）将数据流投射在一个小的存储空间内作为整个数据流的概要，
+    这个小空间存储的概要数据称为略图，可用于近似回答特定的查询。不同的略图可用于对数据流的不同Lp范数的估算，
+    进而这些Lp范数可用于回答其它类型的查询。如L0范数可用于估算数据流的不同值(distinct count)；
+    L1范数可用于计算分位数（quantile）和频繁项（frequent items）；L2范数可用于估算自连接的长度等等。
+    
+5. 防止过拟合<br>
+    XGBoost还提出了两种防止过拟合的方法：Shrinkage and Column Subsampling。
+    
+    5.1 缩减(Shrinkage)<br>
+    Shrinkage方法就是在每次迭代中对树的每个叶子结点的分数乘上一个缩减权重$\alpha$，这可以使得每一棵树的影响力不会太大，
+    留下更大的空间给后面生成的树去优化模型。类似于随机优化过程中的学习率，减少单棵树的影响。
+    
+    5.2 对列的二次采样(Column Subsampling)<br>
+    Column Subsampling类似于随机森林中的选取部分特征进行建树。其可分为两种，一种是按层随机采样，在对同一层内每个结点分裂之前，
+    先随机选择一部分特征，然后只需要遍历这部分的特征，来确定最优的分割点。另一种是随机选择特征，
+    则建树前随机选择一部分特征然后分裂就只遍历这些特征。一般情况下前者效果更好。
+
+6. XGBoost的优点
+    - 使用许多策略去防止过拟合，如：正则化项、Shrinkage and Column Subsampling等。
+    - 目标函数优化利用了损失函数关于待求函数的二阶导数。
+    - 支持并行化，这是XGBoost的闪光点，虽然树与树之间是串行关系，但是同层级节点可并行。
+    具体的对于某个节点，节点内选择最佳分裂点，候选分裂点计算增益用多线程并行。训练速度快。
+    - 添加了对稀疏数据的处理。
+    - 交叉验证，early stop，当预测结果已经很好的时候可以提前停止建树，加快训练速度。
+    - 支持设置样本权重，该权重体现在一阶导数g和二阶导数h，通过调整权重可以去更加关注一些样本。
+
+7. 系统设计(To be continue...)
+
 ### XGBoost与GBDT的联系和区别有哪些？
+原始的GBDT算法基于经验损失函数的负梯度来构造新的决策树，只是在决策树构建完成后再进行剪枝。
+而XGBoost在决策树构建阶段就加入了正则项，即：
+$$ Obj^{(t)} = L(\phi)^{(t)} = \sum_{i=1}^n l(y_i, \hat{y_i}^{(t-1)} + f_t(x_i)) + \Omega(f_t) $$
+根据计算出分裂前后损失函数的差值为：
+$$ Gain = L_{split} = \frac{1}{2} \bigg[ \frac{(\sum_{i \in I_L } g_i)^2}{\sum_{i \in I_L} h_i + \lambda} + \frac{(\sum_{i \in I_R } g_i)^2}{\sum_{i \in I_R} h_i + \lambda} - \frac{(\sum_{i \in I } g_i)^2}{\sum_{i \in I} h_i + \lambda} \bigg] - \gamma $$
+XGBoost采用最大化这个差值作为准则来进行决策树的构建，通过遍历所有特征的所有取值，寻找使得损失函数前后相差最大时对应的分裂方式。
+此外，由于损失函数前后存在差值一定为正的限制，此时$\gamma$起到了一定的预剪枝效果。
+
+1. GBDT是机器学习算法，XGBoost是该算法的工程实现。
+2. 在使用CART作为基分类器时，XGBoost显式地加入了正则项来控制模型的复杂度，有利于防止过拟合，从而提高模型的泛化能力。
+3. GBDT在模型训练时只使用了代价函数的一阶导数信息，XGBoost对代价函数进行二阶泰勒展开，可以同时使用一阶和二阶导数。
+4. 传统的GBDT采用CART作为基分类器，XGBoost支持多种类型的基分类器，比如线性分类器。
+5. 传统的GBDT在每轮迭代时使用全部的数据，XGBoost则采用了与随机森林相似的策略，支持对数据进行采样。
+6. 传统的GBDT没有设计对缺失值进行处理，XGBoost能够自动学习出缺失值的处理策略。
