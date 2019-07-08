@@ -83,7 +83,7 @@ $$ \Sigma = \bigg( \frac{1}{n} \sum_{i=1}^n x_i x_i^T \bigg) $$
 $$ \max \lbrace w^T \Sigma w \rbrace, \quad s.t.\ w^T w = 1 $$
 引入拉格朗日乘子，并对$w$求导令其等于0，得到：
 $$ F(w,\lambda) = (w^T \Sigma w) + \lambda(w^T w - 1)  $$
-$$ => frac{\partial F}{\partial w} = 2\Sigma w + 2\lambda w = 0 $$
+$$ => \frac{\partial F(w, \lambda)}{\partial w} = 2\Sigma w + 2\lambda w = 0 $$
 $$ => \Sigma w = - \lambda w $$
 这里令$-\lambda$为特征值，便可以推出$ \Sigma w = \lambda w $，此时：
 $$ D(x) =w^T \Sigma w = \lambda w^T w = \lambda $$
