@@ -33,7 +33,8 @@ $$ H(p,q) = - \sum_{i=1}^m  p_i \log(q_i) $$
 当两个分布完全相同时，交叉熵取最小值。<br>
 交叉熵可以衡量两个分布之间的相似度，交叉熵越小两个分布越相似。
 - 损失函数推导过程
-![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_01.jpeg?raw=true)
+![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_01.jpeg?raw=true)<br>
+![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_04.png?raw=true)
 
 ### 逻辑回归应用于多分类问题时的情况？
 多项逻辑回归实际上是二分类多级回归在多标签分类下的一种拓展。
