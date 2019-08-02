@@ -32,7 +32,13 @@ $ L(\theta) = \prod_{i=1}^m P(y_i | x_i; \theta)$ 的学习，得到最佳参数
 $$ H(p,q) = - \sum_{i=1}^m  p_i \log(q_i) $$
 当两个分布完全相同时，交叉熵取最小值。<br>
 交叉熵可以衡量两个分布之间的相似度，交叉熵越小两个分布越相似。
-- 损失函数推导过程
+- 损失函数推导过程<br>
+目标是要最大化似然概率，即：
+$$ \max \prod_{i=1}^m p(y_i|x_i; \theta) = \max \frac{1}{m} \prod_{i=1}^m 
+[y^{(i)} \log{(h_\theta(x^{(i)}))} + (1 - y^{(i)}) \log{(1 - h_\theta(x^{(i)}))}] $$
+取负对数，将$max$函数换成$min$函数，即：
+$$ \min \quad -\frac{1}{m} \sum_{i=1}^m 
+[y^{(i)} \log{(h_\theta(x^{(i)}))} + (1 - y^{(i)}) log{(1 - h_\theta{(x^{(i)})})}] $$
 ![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_01.jpeg?raw=true)<br>
 ![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_04.png?raw=true)
 
