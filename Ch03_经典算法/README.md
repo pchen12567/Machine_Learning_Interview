@@ -14,6 +14,37 @@
 逻辑回归的原理推导以及扩展应用几乎是算法工程师的必备技能。医生病理诊断、银行个人信用评估、邮箱分类垃圾邮件等，
 无不体现逻辑回归精巧而广泛的应用。
 
+### 逻辑回归中的相关概念
+![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_07.png?raw=true)
+1. Sigmoid函数
+    - 公式定义
+    $$ S(x) = \frac{1}{1 + e^{-x}} $$
+        - 当x = 0 时，S(x) = 0.5
+        - 当x < 0 时，0 < S(x) < 0.5
+        - 当x > 0 时，0.5 < S(x) < 1
+    - 函数图像
+    ![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_06.jpg?raw=true)
+    - 导数
+    $$ S(x)'= S(x) \bigg( 1 - S(x) \bigg) $$
+    - 导数推导过程
+    ![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_05.png?raw=true)
+
+2. 熵<br>
+在信息论中，熵（entropy）是接收的每条消息中包含的信息的平均量，又被称为信息熵、信源熵、平均自信息量。
+这里，“消息”代表来自分布或数据流中的事件、样本或特征。（熵最好理解为不确定性的量度而不是确定性的量度，因为越随机的信源的熵越大。）
+来自信源的另一个特征是样本的概率分布。
+    - 信息熵<br>
+    在信息论中，设离散随机变量$X$的分布为$ P(X=x^{(i)})=p_i , i=1,2,3,...,n $，则概率分布的熵的定义为：
+    $$ H(p) = -\sum_{i=1}^n p_i \log{p_i} $$
+    - 交叉熵<br>
+    关于同一组事件$X_1,X_2,...,X_m$的两个分布$p$和$q$，其交叉熵的定义如下：
+    $$ H(p,q) = - \sum_{i=1}^m  p_i \log(q_i) $$
+    当两个分布完全相同时，交叉熵取最小值。<br>
+    交叉熵可以衡量两个分布之间的相似度，交叉熵越小两个分布越相似。
+
+3. 逻辑回归中的损失函数
+![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_08.png?raw=true)
+ 
 ### 逻辑回归相比于线性回归，有何异同？
 - 首先，逻辑回归处理的是分类问题，线性回归处理的是回归问题，这是两者的最本质的区别。
 - 逻辑回归中，因变量取值是一个二元分布，模型学习得出的是 $ E[y|x;\theta] $ ，
