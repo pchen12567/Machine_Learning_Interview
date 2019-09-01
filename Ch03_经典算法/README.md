@@ -37,7 +37,8 @@
     在信息论中，设离散随机变量$X$的分布为$ P(X=x^{(i)})=p_i , i=1,2,3,...,n $，则概率分布的熵的定义为：
     $$ H(p) = -\sum_{i=1}^n p_i \log{p_i} $$
     - 交叉熵<br>
-    关于同一组事件$X_1,X_2,...,X_m$的两个分布$p$和$q$，其交叉熵的定义如下：
+    关于同一组事件$X_1,X_2,...,X_m$的两个分布$p$和$q$，(比如在逻辑回归中，p表示真实概率分布情况，q表示预测概率分布情况),
+    其交叉熵的定义如下：
     $$ H(p,q) = - \sum_{i=1}^m  p_i \log(q_i) $$
     当两个分布完全相同时，交叉熵取最小值。<br>
     交叉熵可以衡量两个分布之间的相似度，交叉熵越小两个分布越相似。
@@ -82,7 +83,17 @@ $$ \min \quad -\frac{1}{m} \sum_{i=1}^m
 ![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_02.png?raw=true)
 
 多分类问题<br>
-![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_03.png?raw=true)
+如果一个样本只对应于一个标签，可以假设每个样本属于不同标签的概率服从于几何分布，使用多项逻辑回归( Softmax Regression ) 来进行分类<br>
+![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_03.png?raw=true)<br>
+![](https://github.com/pchen12567/picture_store/blob/master/Interview/lr_09.png?raw=true)<br>
+其中$\theta_1, \theta_2,...,\theta_k \in R^n$为模型的参数，而$ \frac{1}{\sum_{j=1}^k e^{\theta_j^T x}}$可以看作是对概率的归一化。
+为了方便起见，将$ {\theta_1, \theta_2,...,\theta_k} $这k个列向量按顺序排列成$n \times k$维矩阵，写作$\theta$，表示整个参数集。
+一般来说，多项逻辑回归具有参数冗余的特点，即将$ \theta_1, \theta_2,...,\theta_k $同时加减一个向量后预测结果不变。
+
+因此，多项逻辑回归实际上是二分类逻辑回归在多标签分类下的一种拓展。
+
+当存在样本可能属于多个标签的情况时，可以训练k个二分类的逻辑回归分类器。第i个分类器用以区分每个样本是否可以归为第i类，
+训练该分类器时，需要把标签重新整理为“第i类标签”与"非第i类标签”两类。遇过这样的办法，就解决了每个样本可能拥有多个标签的情况 。
 
 ## 03 决策树
 > [决策树实战](https://github.com/pchen12567/Machine_Learning_Interview/tree/master/Ch03_%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/%E5%86%B3%E7%AD%96%E6%A0%91)
