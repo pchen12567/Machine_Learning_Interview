@@ -179,8 +179,8 @@ GBDT训练过程举例如图：<br>
 ![](https://github.com/pchen12567/picture_store/blob/master/Interview/ensemble_06.png?raw=true)
 > [参考：图例过程解释](https://blog.csdn.net/puqutogether/article/details/41957089)
 
-#### 原理详解：
-> [参考：GBDT基本原理及算法描述](https://blog.csdn.net/qq_24519677/article/details/82020863)
+### GBDT原理详解
+> [参考：GBDT梯度提升树原理小结](https://www.cnblogs.com/pinard/p/6140514.html)<br>
 > [参考：GBDT算法原理以及实例理解](https://blog.csdn.net/zpalyq110/article/details/79527653) 
 
 GBDT算法是模型为加法模型，学习算法为前向分步算法，基函数为CART树，损失函数为平方损失函数的回归问题，
@@ -214,9 +214,9 @@ $ L(y,f(x)) =  \frac{1}{2} (y - f(x))^2$ 时，则负梯度 $ - \frac{\partial L
     遍历变量$j$，对固定的切分变量$j$扫描切分点$s$，选择使得上式达到最小值的对$(j,s)$。
     2. 用选的的对$(j,s)$划分区域并决定相应的输出值：
     $$ R_1(j,s) = \lbrace x|x^{(j)} \leq s \rbrace \quad and \quad R_2(j,s) = \lbrace x|x^{(j)} > s \rbrace $$<br>
-    要求最小值，则对$\sum_{x_i \in R_1(j,s} (y_i - c_1)^2$和$\sum_{x_i \in R_2(j,s} (y_i - c_2)^2$分别对$c_1$和$c_2$求偏导，
+    要求最小值，则对$\sum_{x_i \in R_1(j,s)} (y_i - c_1)^2$和$\sum_{x_i \in R_2(j,s)} (y_i - c_2)^2$分别对$c_1$和$c_2$求偏导，
     并令偏导数为0，得到在$ R_1，R_2 $内部使平方损失误差达到最小值的$ c_1, c_2$：
-    $$ c_1 = \frac{1}{N_1} \sum_{x_i \in R_1(j,s} y_i ; \quad c_2 = \frac{1}{N_2} \sum_{x_i \in R_2(j,s} y_i $$<br>
+    $$ c_1 = \frac{1}{N_1} \sum_{x_i \in R_1(j,s)} y_i ; \quad c_2 = \frac{1}{N_2} \sum_{x_i \in R_2(j,s)} y_i $$<br>
     而$c_1,c_2$即为各自叶节点中的残差的均值，合并后写成如下：
     $$ \hat{c_m} = \frac{1}{N} \sum_{x_i \in R_m(j,s)} y_i, \quad x_i \in R_m, m = 1,2 $$
     3. 继续对两个子区域调用步骤(i)和(ii)，直到满足停止条件。
